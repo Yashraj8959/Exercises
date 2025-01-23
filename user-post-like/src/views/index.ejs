@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-100 flex flex-col items-center  min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white w-full shadow-md p-0 mt-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-xl font-bold">Social</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="/" class="text-gray-800 hover:text-gray-600 px-3 py-2 rounded-md text-sm font-medium">Login</a>
+                    <a href="/" class="ml-4 text-gray-800 hover:text-gray-600 px-3 py-2 rounded-md text-sm font-medium">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+     <main class="flex justify-center">
+         <div class="bg-white p-8 rounded shadow-md w-full max-w-md mt-8">
+             <h1 class="text-2xl font-bold mb-6 text-center">Register Yourself</h1>
+             <form action="/create-user" method="post" class="space-y-4">
+                 <input type="text" name="username" placeholder="Username" class="w-full p-2 border border-gray-300 rounded">
+                 <input type="text" name="email" placeholder="Email" class="w-full p-2 border border-gray-300 rounded">
+                 <input type="text" name="bio" placeholder="Bio" class="w-full p-2 border border-gray-300 rounded">
+                 <input type="text" name="imageUrl" placeholder="Image URL" class="w-full p-2 border border-gray-300 rounded">
+                 <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Submit</button>
+             </form>
+         </div>
+     </main>
+</body>
+</html>
