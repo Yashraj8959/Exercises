@@ -13,15 +13,24 @@ module.exports.indexController = (req,res)=>{
 
 // --------------------------> create user controller
 module.exports.createUserController =async (req,res)=>{
-    // console.log(req.body);
-    // res.send('kii')
-    const {username,email,bio,imageUrl,password} = req.body;
-    const hash = await bcrypt.hash(password,10)
-    const newUser = await userModel.create({
-        username,email,bio,imageUrl,password : hash
-    })
-    // res.send(newUser)
-    res.redirect('/home')
+    try {
+        const {username,email,bio,imageUrl,password } = req.body;
+        if (!password) {
+            return res.status(400).send('Password is required')
+        }
+        const hashPassword = await bcrypt.hash(password, 10)
+        const newUser = await userModel.create({
+            username,email,bio,imageUrl,password: hashPassword
+        })
+        const token = jwt.sign({ _id: newUser._id, email: newUser.email }, process.env.JWT_SECRET)
+
+        // console.log(res.cookie('token', token))
+
+        res.redirect('/home')
+    
+    } catch (error) {
+        res.status(400).send(error)
+    }
 }
 
 // --------------------------> login controller
@@ -33,17 +42,12 @@ module.exports.loginController = (req,res)=>{
 module.exports.loginUserController = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(email)
         const user = await userModel.findOne({ email });
-        console.log(user);
-
         if (!user) {
             return res.status(400).json({
                 message:'Invalid email or password'
             })
         }
-
-
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             console.log('Password does not match');
@@ -64,11 +68,9 @@ module.exports.loginUserController = async (req, res) => {
             //     // res.redirect('/home');
             // }
         );
-        console.log('Token:', token);
-        res.status(200).json({
-            message: 'Logged in',
-            token: token
-        });
+        res.cookie('token', token)
+        // console.log()
+        res.redirect('/home')
         // res.redirect('/home');
     } catch (error) {
         console.error('Error during login:', error);
@@ -84,11 +86,22 @@ module.exports.profileController = (req,res)=>{
 
 
  // --------------------------> home controller
-module.exports.homeController =async (req,res)=>{
-    const posts = await postModel.find().sort({createdAt:-1})
-    const users = await userModel.find().sort({createdAt:-1});
-    res.render('home',{posts,users} )
+module.exports.homeController = async (req,res)=>{
+        console.log(req.user)
+        const posts = await postModel.find().sort({createdAt:-1})
+        const users = await userModel.find().sort({createdAt:-1});
+        res.render('home',{posts,users} )
 }
+
+// --------------------------> logout controller
+module.exports.logoutController = (req,res)=>{
+    res.clearCookie('token')
+    // res.cookie('token','')
+    res.redirect('/login')
+}
+
+
+
 
 // --------------------------> create post controller
 module.exports.createPostController = (req,res)=>{
