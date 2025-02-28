@@ -14,7 +14,6 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
         console.log('User disconnected');
     })
-
 });
 server.listen(port, () => {          // Start the server on the specified port
     console.log(`Server is running on port ${port}`)
